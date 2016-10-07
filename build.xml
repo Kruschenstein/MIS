@@ -20,6 +20,7 @@
   <!-- COMPILATION -->
   <target name="compile" depends="init">
     <javac srcdir="${src}" destdir="${bin}" includeantruntime="false">
+      <compilerarg value="-Xlint:unchecked"/>
     </javac>
   </target>
 

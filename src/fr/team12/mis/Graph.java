@@ -4,13 +4,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Created by Antoine on 07/10/2016.
- */
 public class Graph
 {
+    private Map<String, List<String>> graph;
 
-    Map <String, List<String>> graph;
+    public Graph(Map<String, List<String>> graph)
+    {
+        this.graph = graph;
+    }
 
     public Graph getConnexe()
     {
@@ -23,6 +24,8 @@ public class Graph
 
         return null;
     }
+
+    // N[v]
     public Set<String> getNeighborsWithVertex(String vertex)
     {
 
@@ -59,8 +62,25 @@ public class Graph
         return 0;
     }
 
-    public int MIS(){
+    public int MIS()
+    {
 
         return 0;
+    }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder ret = new StringBuilder(graph.size() + "\n");
+        for (Map.Entry<String, List<String>> entry: graph.entrySet())
+        {
+            ret.append(entry.getKey() + ": [ ");
+            for (String vertex: entry.getValue())
+            {
+                ret.append(vertex + " ");
+            }
+            ret.append("]\n");
+        }
+        return ret.toString();
     }
 }

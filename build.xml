@@ -1,0 +1,55 @@
+<project name="MIS" default="compile">
+  <!-- DIR NAME -->
+  <property name="src" location="src"/>
+  <property name="bin" location="bin"/>
+  <property name="doc" location="doc"/>
+
+  <!-- JAR NAME -->
+  <property name="jar" value="Main.jar"/>
+  <!-- MAIN NAME -->
+  <property name="package" value="fr.team12.mis"/>
+  <property name="main" value="Main"/>
+
+  <target name="all" depends="dist,doc"/>
+  <target name="re" depends="clean,dist"/>
+
+  <target name="init">
+    <mkdir dir="${bin}"/>
+  </target>
+
+  <!-- COMPILATION -->
+  <target name="compile" depends="init">
+    <javac srcdir="${src}" destdir="${bin}" includeantruntime="false">
+    </javac>
+  </target>
+
+  <!-- JAR CREATION -->
+  <target name="dist" depends="compile">
+    <delete file="${bin}/${jar}"/>
+    <jar jarfile="${bin}/${jar}" basedir="${bin}">
+      <manifest>
+        <attribute name="Main-Class" value="${package}.${main}"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <!-- JAR EXECUTION -->
+  <target name="run" depends="dist">
+    <java jar="${bin}/${jar}" fork="true"/>
+  </target>
+
+  <!-- DOCUMENTATION -->
+  <target name="doc">
+    <mkdir dir="${doc}"/>
+    <javadoc destdir="${doc}">
+      <fileset dir="${src}">
+        <include name="*.java"/>
+      </fileset>
+    </javadoc>
+  </target>
+
+  <target name="clean">
+    <delete dir="${bin}"/>
+    <delete dir="${doc}"/>
+  </target>
+</project>

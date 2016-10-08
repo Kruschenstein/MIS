@@ -37,7 +37,7 @@ public class Graph
             }
             else
             {
-                Explored = ExploreNeighboors(Vertex, Explored);
+                Explored = ExploreNeighbors(Vertex, Explored);
                 if(Explored.size() == graph.size())
                 {
                     return null;
@@ -63,15 +63,15 @@ public class Graph
      * @param Explored
      * @return the list of all explored vertex.
      */
-    private List<String> ExploreNeighboors(String vertex, List<String> Explored)
+    private List<String> ExploreNeighbors(String vertex, List<String> Explored)
     {
-        List<String> neighboors = graph.get(vertex);
+        List<String> neighbors = graph.get(vertex);
         Explored.add(vertex);
-        for(String item : neighboors)
+        for(String item : neighbors)
         {
             if(!Explored.contains(item))
             {
-                ExploreNeighboors(item, Explored);
+                ExploreNeighbors(item, Explored);
             }
         }
         return Explored;
@@ -94,12 +94,12 @@ public class Graph
         Set<String> keysRes = result.graph.keySet();
         for (String item : keysRes)
         {
-            List<String> neighboors = result.graph.get(item);
+            List<String> neighbors = result.graph.get(item);
             for(String remove : keysRm)
             {
-                neighboors.remove(remove);
+                neighbors.remove(remove);
             }
-            result.graph.replace(item, neighboors);
+            result.graph.replace(item, neighbors);
         }
         return result;
     }
@@ -129,10 +129,44 @@ public class Graph
         return ret;
     }
 
-    public Graph fold(String vertex)
+    /**
+     * Make the two neighbors of vertex to "fold" into one new vertex that will replace vertex and his two neighbors
+     * @param vertex vertex to fold
+     * @return a new graph with the new folded vertex.
+     */
+    public Graph fold2(String vertex)
     {
+        List<String> neighbors = this.graph.get(vertex);
+        List<String> newNeighbors = new LinkedList();
+        String newKey = "";
+        Map<String, List<String>> result = this.graph;
+        for (String item : neighbors)
+        {
+            for(String toadd : this.graph.get(item))
+            {
+                if(toadd.compareTo(vertex) != 0 && !newNeighbors.contains(toadd))
+                {
+                    newNeighbors.add(toadd);
+                }
+            }
+            newKey = newKey.concat(item);
+            result.remove(item);
+        }
+        result.remove(vertex);
 
-        return null;
+        for(String item : newNeighbors)
+        {
+            for(String rm : neighbors)
+            {
+                if(result.get(item).contains(rm))
+                {
+                    result.get(item).remove(rm);
+                }
+            }
+            result.get(item).add(newKey);
+        }
+        result.put(newKey, newNeighbors);
+        return new Graph(result);
     }
 
     /**
@@ -150,10 +184,66 @@ public class Graph
         return null;
     }
 
-    public Set<String> mirror(String vertex)
+    /**
+     * Check if a list of vertex is a clique, in other words, if all the vertex of the list have for neighbors all the other vertex of the list
+     * @param vertexs list of vertexs to check
+     * @return true if vertexs is a clique, false if not
+     */
+    private boolean isComplete(List<String> vertexs)
     {
+        for (String item : vertexs)
+        {
+            for(String toTest : vertexs)
+            {
+                if(item.compareTo(toTest) != 0 && !this.graph.get(item).contains(toTest))
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
-        return null;
+
+    /**
+     * Return the neighbors of neighbors of the vertex in parameters ( N²(vertex) )
+     * @param vertex
+     * @return the list equals to N²(vertex)
+     */
+    private List<String> getNeighborsOfNeighbors(String vertex)
+    {
+        List<String> neighbors2 = new LinkedList();
+        for (String item : this.graph.get(vertex))
+        {
+            for(String toadd : this.graph.get(item))
+            {
+                if(toadd.compareTo(vertex) != 0 && !neighbors2.contains(toadd))
+                {
+                    neighbors2.add(toadd);
+                }
+            }
+        }
+        return neighbors2;
+    }
+
+    /**
+     * Get the mirrors of a vertex
+     * @param vertex
+     * @return a list of vertex that are mirrors of the parameter
+     */
+    public List<String> mirror(String vertex)
+    {
+        List<String> result = new LinkedList();
+        for(String item : getNeighborsOfNeighbors(vertex))
+        {
+            List<String> toCheck = this.graph.get(vertex);
+            toCheck.removeAll(this.graph.get(item));
+            if(isComplete(toCheck))
+            {
+                result.add(item);
+            }
+        }
+        return result;
     }
 
     /**

@@ -1,0 +1,51 @@
+
+src/fr/team12/mis/Either.java,225
+    private R right;5,52
+    private L left;6,73
+    public Either(8,94
+    public Either(14,196
+    public R getRight(19,255
+    public L getLeft(24,314
+    public void setRight(29,371
+    public void setLeft(34,446
+
+src/fr/team12/mis/GraphFactory.java,251
+public class GraphFactory13,212
+    public static Either<GraphFactory.Either15,240
+    public static Either<Graph, String> generateFromFile(GraphFactory.generateFromFile15,240
+    private static List<String> getList(GraphFactory.getList65,2001
+
+src/fr/team12/mis/Graph.java,903
+public class Graph12,201
+    private Map<Graph.Map14,222
+    private Map<String, List<String>> graph;Graph.graph14,222
+    public Graph(Graph.Graph16,268
+    public Graph getConnexe(Graph.getConnexe27,598
+    private List<String> ExploreNeighboors(Graph.ExploreNeighboors66,1717
+    public Graph deprivateOf(Graph.deprivateOf86,2354
+    public List<String> getNeighbors(Graph.getNeighbors112,3035
+    public Set<String> getNeighborsWithVertex(Graph.getNeighborsWithVertex121,3199
+    public Graph fold(Graph.fold132,3488
+    public String get2degreeVertex(Graph.get2degreeVertex143,3753
+    public Set<String> mirror(Graph.mirror153,4002
+    public String findMaxDegreeVertex(Graph.findMaxDegreeVertex164,4260
+    public int getNeighbourEdgeNumber(Graph.getNeighbourEdgeNumber184,4839
+    public int MIS(Graph.MIS211,5782
+    public String toString(Graph.toString218,5849
+
+src/fr/team12/mis/Main.java,209
+public class Main3,24
+    private static final String graphResult Main.graphResult5,44
+    public static boolean testGraphFactory(Main.testGraphFactory15,330
+    public static void main(Main.main32,762
+
+src/fr/team12/mis/UnorderedTuple.java,481
+public class UnorderedTuple<UnorderedTuple3,24
+    private final T fst;UnorderedTuple.fst5,57
+    private final T snd;UnorderedTuple.snd6,82
+    public UnorderedTuple(UnorderedTuple.UnorderedTuple8,108
+    public T getFst(UnorderedTuple.getFst14,209
+    public T getSnd(UnorderedTuple.getSnd15,247
+    public boolean equals(UnorderedTuple.equals18,300
+    public String toString(UnorderedTuple.toString29,622
+    public int hashCode(UnorderedTuple.hashCode35,743

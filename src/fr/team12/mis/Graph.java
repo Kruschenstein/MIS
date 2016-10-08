@@ -17,7 +17,23 @@ public class Graph
     {
         this.graph = graph;
     }
-
+    public Graph(String vortex)
+    {
+        Map<String, List<String>> m = new HashMap();
+        m.put(vortex, new LinkedList<String>());
+        this.graph = m;
+    }
+    
+    public Graph(Graph graphToCopy)
+    {
+        this.graph = new HashMap<String, List<String>>();
+        for (Map.Entry<String, List<String>> item: graphToCopy.graph.entrySet())
+        {
+            this.graph.put(new String(item.getKey()), 
+                           new LinkedList<String>(item.getValue()));
+        }
+    }
+    
     /**
      * Get a connected componenent of the graph, if the graph extracted is equal
      * to this, return null.
@@ -26,7 +42,6 @@ public class Graph
      */
     public Graph getConnexe()
     {
-
         List<String> Explored = new LinkedList<String>();
         for (Map.Entry<String, List<String>> entry : graph.entrySet())
         {
@@ -85,7 +100,7 @@ public class Graph
      */
     public Graph deprivateOf(Graph removeGraph)
     {
-        Graph result = new Graph(this.graph);
+        Graph result = new Graph(this);
         Set<String> keysRm = removeGraph.graph.keySet();
         for (String item : keysRm)
         {
@@ -93,13 +108,11 @@ public class Graph
         }
         Set<String> keysRes = result.graph.keySet();
         for (String item : keysRes)
-        {
-            List<String> neighbors = result.graph.get(item);
+        {      
             for(String remove : keysRm)
             {
-                neighbors.remove(remove);
+                result.getNeighbors(item).remove(remove);
             }
-            result.graph.replace(item, neighbors);
         }
         return result;
     }
@@ -136,13 +149,13 @@ public class Graph
      */
     public Graph fold2(String vertex)
     {
-        List<String> neighbors = this.graph.get(vertex);
+        List<String> neighbors = getNeighbors(vertex);
         List<String> newNeighbors = new LinkedList();
         String newKey = "";
-        Map<String, List<String>> result = this.graph;
+        Graph result = new Graph(this);      
         for (String item : neighbors)
         {
-            for(String toadd : this.graph.get(item))
+            for(String toadd : getNeighbors(item))
             {
                 if(toadd.compareTo(vertex) != 0 && !newNeighbors.contains(toadd))
                 {
@@ -150,23 +163,24 @@ public class Graph
                 }
             }
             newKey = newKey.concat(item);
-            result.remove(item);
+            newKey = newKey.concat(",");
+            result.graph.remove(item);
         }
-        result.remove(vertex);
+        result.graph.remove(vertex);
 
         for(String item : newNeighbors)
         {
             for(String rm : neighbors)
             {
-                if(result.get(item).contains(rm))
+                if(result.graph.get(item).contains(rm))
                 {
-                    result.get(item).remove(rm);
+                    result.graph.get(item).remove(rm);
                 }
             }
-            result.get(item).add(newKey);
+            result.graph.get(item).add(newKey);
         }
-        result.put(newKey, newNeighbors);
-        return new Graph(result);
+        result.graph.put(newKey, newNeighbors);
+        return result;
     }
 
     /**
@@ -195,7 +209,7 @@ public class Graph
         {
             for(String toTest : vertexs)
             {
-                if(item.compareTo(toTest) != 0 && !this.graph.get(item).contains(toTest))
+                if(item.compareTo(toTest) != 0 && !getNeighbors(item).contains(toTest))
                 {
                     return false;
                 }
@@ -213,11 +227,12 @@ public class Graph
     private List<String> getNeighborsOfNeighbors(String vertex)
     {
         List<String> neighbors2 = new LinkedList();
-        for (String item : this.graph.get(vertex))
+        List<String> neighbors = getNeighbors(vertex);
+        for(String item : neighbors)
         {
-            for(String toadd : this.graph.get(item))
+            for(String toadd : getNeighbors(item))
             {
-                if(toadd.compareTo(vertex) != 0 && !neighbors2.contains(toadd))
+                if(toadd.compareTo(vertex) != 0 && !neighbors.contains(toadd) && !neighbors2.contains(toadd))
                 {
                     neighbors2.add(toadd);
                 }
@@ -236,8 +251,8 @@ public class Graph
         List<String> result = new LinkedList();
         for(String item : getNeighborsOfNeighbors(vertex))
         {
-            List<String> toCheck = this.graph.get(vertex);
-            toCheck.removeAll(this.graph.get(item));
+            List<String> toCheck = new LinkedList(getNeighbors(vertex));
+            toCheck.removeAll(getNeighbors(item));
             if(isComplete(toCheck))
             {
                 result.add(item);
@@ -267,6 +282,22 @@ public class Graph
         return maxDegreeVertex;
     }
 
+    public String findVertexContainer()
+    {
+        for(String item : this.graph.keySet())
+        {
+            for(String neighbors : getNeighbors(item))
+            {
+                if(getNeighbors(item).containsAll(getNeighbors(neighbors)))
+                {
+                    return item;
+                }
+            }
+            
+        }
+        return null;
+    }
+    
     /**
      * Return the number of edge between two vertices of N(vertex).
      * @return The number of edge between two vertices of N(vertex).
@@ -297,11 +328,56 @@ public class Graph
             System.out.println(couple);
         return visitedNode.size();
     }
+    
+    public String findFoldable()
+    {
+        for (Map.Entry<String, List<String>> vertex: graph.entrySet())
+        {
+            if (vertex.getValue().size() == 2 && 
+                    getNeighbourEdgeNumber(vertex.getKey()) == 0)
+                return vertex.getKey();
+        }
+        return null;
+    }
 
     public int MIS()
     {
-
-        return 0;
+        Graph C ;
+        String S;
+        if(this.graph.keySet().size() <= 1)
+        {
+            return this.graph.keySet().size();
+        }
+        else if((C = getConnexe()) != null)
+        {
+            return C.MIS() + ((this.deprivateOf(C)).MIS());
+        }
+        else if((S = this.findVertexContainer()) != null)
+        {
+            Map<String, List<String>> m = new HashMap();
+            m.put(S, new LinkedList<String>());
+            return (this.deprivateOf(new Graph(m))).MIS();
+        }
+        else if((S = this.findFoldable()) != null ) // get2degreeVertex
+        {
+            return 1+(this.fold2(S).MIS());
+        }
+        else
+        {
+            S = this.findMaxDegreeVertex();
+            Graph a = new Graph(this);
+            a = a.deprivateOf(new Graph(S));
+            for(String item : this.mirror(S))
+            {
+                a = a.deprivateOf(new Graph(item));
+            }  
+            Graph b = new Graph(this);
+            for(String item : b.getNeighborsWithVertex(S))
+            {
+                b = b.deprivateOf(new Graph(item));
+            }
+            return Math.max(a.MIS(), b.MIS());           
+        }
     }
 
     @Override

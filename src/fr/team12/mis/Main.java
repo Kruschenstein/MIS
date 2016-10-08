@@ -31,10 +31,10 @@ public class Main
 
     public static void main(String... args)
     {
-        testGraphFactory();
+        //testGraphFactory();
         Either<Graph, String> result = GraphFactory.generateFromFile(
             "graphe.graphe");
-
+        
         if (result.getLeft() != null)
         {
             System.out.println(result.getLeft());
@@ -42,6 +42,7 @@ public class Main
         }
 
         Graph graph = result.getRight();
-        System.out.println(graph.getNeighbourEdgeNumber("7"));
+        System.out.println(graph.MIS());
+        //System.out.println(graph.getNeighbourEdgeNumber("7"));
     }
 }

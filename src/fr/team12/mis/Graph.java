@@ -104,7 +104,20 @@ public class Graph
         return result;
     }
 
-    // N[v]
+
+    /**
+     * Return N(vertex)
+     * @return N(vertex)
+     */
+    public List<String> getNeighbors(String vertex)
+    {
+        return graph.get(vertex);
+    }
+
+    /**
+     * Return N[vertex]
+     * @return N[vertex]
+     */
     public Set<String> getNeighborsWithVertex(String vertex)
     {
         Set<String> ret = new HashSet<String>();
@@ -123,10 +136,10 @@ public class Graph
     }
 
     /**
-    ** Return first vertex that have exactly 2 neighbors. If such vertex doesn't
-    ** exist, return null.
-    ** @return vertex that have exactly 2 neighbors, null otherwise.
-    */
+     * Return first vertex that have exactly 2 neighbors. If such vertex doesn't
+     * exist, return null.
+     * @return vertex that have exactly 2 neighbors, null otherwise.
+     */
     public String get2degreeVertex()
     {
         for (Map.Entry<String, List<String>> vertex: graph.entrySet())
@@ -144,10 +157,10 @@ public class Graph
     }
 
     /**
-    ** Return the vertex which have the greatest degree in the vertices set.
-    **
-    ** @return The vertex which have the greatest degree in the vertices set.
-    */
+     * Return the vertex which have the greatest degree in the vertices set.
+     *
+     * @return The vertex which have the greatest degree in the vertices set.
+     */
     public String findMaxDegreeVertex()
     {
         String maxDegreeVertex = "";
@@ -164,11 +177,35 @@ public class Graph
         return maxDegreeVertex;
     }
 
-    // T
+    /**
+     * Return the number of edge between two vertices of N(vertex).
+     * @return The number of edge between two vertices of N(vertex).
+     */
     public int getNeighbourEdgeNumber(String vertex)
     {
+        Set<UnorderedTuple<String>> visitedNode =
+            new HashSet<UnorderedTuple<String>>();
 
-        return 0;
+        for (String vertexNeighbour: getNeighbors(vertex))
+        {
+            if (vertex.equals(vertexNeighbour))
+                continue;
+
+            for (String v: getNeighbors(vertexNeighbour))
+            {
+                if (!v.equals(vertex) &&
+                    getNeighbors(vertex).contains(v) &&
+                    !visitedNode.contains(new UnorderedTuple<String>(
+                                              vertexNeighbour, v)))
+                {
+                    visitedNode.add(new UnorderedTuple<String>(
+                                              vertexNeighbour, v));
+                }
+            }
+        }
+        for (UnorderedTuple<String> couple: visitedNode)
+            System.out.println(couple);
+        return visitedNode.size();
     }
 
     public int MIS()

@@ -19,7 +19,8 @@
 
   <!-- COMPILATION -->
   <target name="compile" depends="init">
-    <javac srcdir="${src}" destdir="${bin}" includeantruntime="false">
+    <javac srcdir="${src}" destdir="${bin}" debug="on"
+           debuglevel="lines,vars,source" includeantruntime="false">
       <compilerarg value="-Xlint:unchecked"/>
     </javac>
   </target>

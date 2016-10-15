@@ -37,11 +37,16 @@ public class Main
         
         if (result.getLeft() != null)
         {
+            System.out.println("result.getLeft()");
             System.out.println(result.getLeft());
             return;
         }
 
         Graph graph = result.getRight();
+        
+        // System.out.println(graph.findMaxDegreeMaxEdgesVertex());
+        
+        System.out.println("graph.MIS():");
         System.out.println(graph.MIS());
         //System.out.println(graph.getNeighbourEdgeNumber("7"));
     }

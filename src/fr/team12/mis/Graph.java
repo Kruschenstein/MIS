@@ -48,7 +48,10 @@ public class Graph
             String Vertex = entry.getKey();
             if(entry.getValue().isEmpty())
             {
-                Explored.add(Vertex);
+                Map <String, List<String>> component =
+                        new HashMap<String, List<String>>();
+                component.put(Vertex,graph.get(Vertex));
+                return new Graph(component);
             }
             else
             {
@@ -288,7 +291,7 @@ public class Graph
         {
             for(String neighbors : getNeighbors(item))
             {
-                if(getNeighbors(item).containsAll(getNeighbors(neighbors)))
+                if(getNeighborsWithVertex(item).containsAll(getNeighborsWithVertex(neighbors)))
                 {
                     return item;
                 }
@@ -324,8 +327,6 @@ public class Graph
                 }
             }
         }
-        for (UnorderedTuple<String> couple: visitedNode)
-            System.out.println(couple);
         return visitedNode.size();
     }
     
@@ -344,9 +345,9 @@ public class Graph
     {
         Graph C ;
         String S;
-        if(this.graph.keySet().size() <= 1)
+        if(this.graph.size() <= 1)
         {
-            return this.graph.keySet().size();
+            return this.graph.size();
         }
         else if((C = getConnexe()) != null)
         {
@@ -354,17 +355,22 @@ public class Graph
         }
         else if((S = this.findVertexContainer()) != null)
         {
-            Map<String, List<String>> m = new HashMap();
-            m.put(S, new LinkedList<String>());
-            return (this.deprivateOf(new Graph(m))).MIS();
+            System.out.println("==3== : " + S);
+            //~ Map<String, List<String>> m = new HashMap();
+            //~ m.put(S, new LinkedList<String>());
+            Graph a = new Graph(this);
+            a = a.deprivateOf(new Graph(S));
+            //~ this.deprivateOf(new Graph(m));
+            System.out.println(a);
+            return a.MIS();
         }
-        else if((S = this.findFoldable()) != null ) // get2degreeVertex
+        else if((S = this.findFoldable()) != null) // get2degreeVertex
         {
             return 1+(this.fold2(S).MIS());
         }
         else
         {
-            S = this.findMaxDegreeVertex();
+            S = this.findMaxDegreeMaxEdgesVertex();
             Graph a = new Graph(this);
             a = a.deprivateOf(new Graph(S));
             for(String item : this.mirror(S))
@@ -394,5 +400,45 @@ public class Graph
             ret.append("]\n");
         }
         return ret.toString();
+    }
+    
+    
+    /**
+     * Returns a vertex with N(vertex) max for which the number of edges between two vertices is maximum.
+     * @param 
+     * @return The number of edge between two vertices of N(vertex).
+     */
+    public String findMaxDegreeMaxEdgesVertex()
+    {
+        //Find the vertices with N(vertex) max.
+        String MDMEVertex = "";
+        int maxValue = -1;
+        Set<String> maxDegreeVertices = new HashSet<String>();
+        for (Map.Entry<String, List<String>> vertex: graph.entrySet())
+        {
+            if (vertex.getValue().size() > maxValue)
+            {
+                maxValue = vertex.getValue().size();
+                maxDegreeVertices.clear();
+                maxDegreeVertices.add(vertex.getKey());
+            }
+            else if (vertex.getValue().size() == maxValue)
+            {
+                maxDegreeVertices.add(vertex.getKey());
+            }
+        }
+        //Find which vertex has the highest number of edges between two vertices.
+        maxValue = -1;
+        int tmp = -1;
+        for (String vertex: maxDegreeVertices)
+        {
+            tmp = getNeighbourEdgeNumber(vertex);
+            if (tmp > maxValue)
+            {
+                maxValue = tmp;
+                MDMEVertex = vertex;
+            }
+        }
+        return MDMEVertex;
     }
 }

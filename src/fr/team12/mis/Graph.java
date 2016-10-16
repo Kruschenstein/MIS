@@ -19,21 +19,21 @@ public class Graph
     }
     public Graph(String vortex)
     {
-        Map<String, List<String>> m = new HashMap();
+        Map<String, List<String>> m = new HashMap<String, List<String>>();
         m.put(vortex, new LinkedList<String>());
         this.graph = m;
     }
-    
+
     public Graph(Graph graphToCopy)
     {
         this.graph = new HashMap<String, List<String>>();
         for (Map.Entry<String, List<String>> item: graphToCopy.graph.entrySet())
         {
-            this.graph.put(new String(item.getKey()), 
+            this.graph.put(new String(item.getKey()),
                            new LinkedList<String>(item.getValue()));
         }
     }
-    
+
     /**
      * Get a connected componenent of the graph, if the graph extracted is equal
      * to this, return null.
@@ -46,7 +46,7 @@ public class Graph
         for (Map.Entry<String, List<String>> entry : graph.entrySet())
         {
             String Vertex = entry.getKey();
-            if(entry.getValue().isEmpty())
+            if (entry.getValue().isEmpty())
             {
                 Map <String, List<String>> component =
                         new HashMap<String, List<String>>();
@@ -56,7 +56,7 @@ public class Graph
             else
             {
                 Explored = ExploreNeighbors(Vertex, Explored);
-                if(Explored.size() == graph.size())
+                if (Explored.size() == graph.size())
                 {
                     return null;
                 }
@@ -85,9 +85,9 @@ public class Graph
     {
         List<String> neighbors = graph.get(vertex);
         Explored.add(vertex);
-        for(String item : neighbors)
+        for (String item : neighbors)
         {
-            if(!Explored.contains(item))
+            if (!Explored.contains(item))
             {
                 ExploreNeighbors(item, Explored);
             }
@@ -111,8 +111,8 @@ public class Graph
         }
         Set<String> keysRes = result.graph.keySet();
         for (String item : keysRes)
-        {      
-            for(String remove : keysRm)
+        {
+            for (String remove : keysRm)
             {
                 result.getNeighbors(item).remove(remove);
             }
@@ -146,21 +146,23 @@ public class Graph
     }
 
     /**
-     * Make the two neighbors of vertex to "fold" into one new vertex that will replace vertex and his two neighbors
+     * Make the two neighbors of vertex to "fold" into one new vertex that will
+     * replace vertex and his two neighbors
      * @param vertex vertex to fold
      * @return a new graph with the new folded vertex.
      */
     public Graph fold2(String vertex)
     {
         List<String> neighbors = getNeighbors(vertex);
-        List<String> newNeighbors = new LinkedList();
+        List<String> newNeighbors = new LinkedList<String>();
         String newKey = "";
-        Graph result = new Graph(this);      
+        Graph result = new Graph(this);
         for (String item : neighbors)
         {
-            for(String toadd : getNeighbors(item))
+            for (String toadd : getNeighbors(item))
             {
-                if(toadd.compareTo(vertex) != 0 && !newNeighbors.contains(toadd))
+                if (toadd.compareTo(vertex) != 0 && !newNeighbors
+                    .contains(toadd))
                 {
                     newNeighbors.add(toadd);
                 }
@@ -171,11 +173,11 @@ public class Graph
         }
         result.graph.remove(vertex);
 
-        for(String item : newNeighbors)
+        for (String item : newNeighbors)
         {
-            for(String rm : neighbors)
+            for (String rm : neighbors)
             {
-                if(result.graph.get(item).contains(rm))
+                if (result.graph.get(item).contains(rm))
                 {
                     result.graph.get(item).remove(rm);
                 }
@@ -202,7 +204,8 @@ public class Graph
     }
 
     /**
-     * Check if a list of vertex is a clique, in other words, if all the vertex of the list have for neighbors all the other vertex of the list
+     * Check if a list of vertex is a clique, in other words, if all the vertex
+     * of the list have for neighbors all the other vertex of the list
      * @param vertexs list of vertexs to check
      * @return true if vertexs is a clique, false if not
      */
@@ -210,9 +213,10 @@ public class Graph
     {
         for (String item : vertexs)
         {
-            for(String toTest : vertexs)
+            for (String toTest : vertexs)
             {
-                if(item.compareTo(toTest) != 0 && !getNeighbors(item).contains(toTest))
+                if (item.compareTo(toTest) != 0 && !getNeighbors(item)
+                    .contains(toTest))
                 {
                     return false;
                 }
@@ -223,19 +227,21 @@ public class Graph
 
 
     /**
-     * Return the neighbors of neighbors of the vertex in parameters ( N²(vertex) )
+     * Return the neighbors of neighbors of the vertex in parameters
+     * ( N²(vertex) )
      * @param vertex
      * @return the list equals to N²(vertex)
      */
     private List<String> getNeighborsOfNeighbors(String vertex)
     {
-        List<String> neighbors2 = new LinkedList();
+        List<String> neighbors2 = new LinkedList<String>();
         List<String> neighbors = getNeighbors(vertex);
-        for(String item : neighbors)
+        for (String item : neighbors)
         {
-            for(String toadd : getNeighbors(item))
+            for (String toadd : getNeighbors(item))
             {
-                if(toadd.compareTo(vertex) != 0 && !neighbors.contains(toadd) && !neighbors2.contains(toadd))
+                if (toadd.compareTo(vertex) != 0 && !neighbors.contains(toadd)
+                    && !neighbors2.contains(toadd))
                 {
                     neighbors2.add(toadd);
                 }
@@ -251,12 +257,12 @@ public class Graph
      */
     public List<String> mirror(String vertex)
     {
-        List<String> result = new LinkedList();
-        for(String item : getNeighborsOfNeighbors(vertex))
+        List<String> result = new LinkedList<String>();
+        for (String item : getNeighborsOfNeighbors(vertex))
         {
-            List<String> toCheck = new LinkedList(getNeighbors(vertex));
+            List<String> toCheck = new LinkedList<String>(getNeighbors(vertex));
             toCheck.removeAll(getNeighbors(item));
-            if(isComplete(toCheck))
+            if (isComplete(toCheck))
             {
                 result.add(item);
             }
@@ -287,20 +293,21 @@ public class Graph
 
     public String findVertexContainer()
     {
-        for(String item : this.graph.keySet())
+        for (String item : this.graph.keySet())
         {
-            for(String neighbors : getNeighbors(item))
+            for (String neighbors : getNeighbors(item))
             {
-                if(getNeighborsWithVertex(item).containsAll(getNeighborsWithVertex(neighbors)))
+                if (getNeighborsWithVertex(item).containsAll(
+                        getNeighborsWithVertex(neighbors)))
                 {
                     return item;
                 }
             }
-            
+
         }
         return null;
     }
-    
+
     /**
      * Return the number of edge between two vertices of N(vertex).
      * @return The number of edge between two vertices of N(vertex).
@@ -329,12 +336,12 @@ public class Graph
         }
         return visitedNode.size();
     }
-    
+
     public String findFoldable()
     {
         for (Map.Entry<String, List<String>> vertex: graph.entrySet())
         {
-            if (vertex.getValue().size() == 2 && 
+            if (vertex.getValue().size() == 2 &&
                     getNeighbourEdgeNumber(vertex.getKey()) == 0)
                 return vertex.getKey();
         }
@@ -345,26 +352,21 @@ public class Graph
     {
         Graph C ;
         String S;
-        if(this.graph.size() <= 1)
+        if (this.graph.size() <= 1)
         {
             return this.graph.size();
         }
-        else if((C = getConnexe()) != null)
+        else if ((C = getConnexe()) != null)
         {
             return C.MIS() + ((this.deprivateOf(C)).MIS());
         }
-        else if((S = this.findVertexContainer()) != null)
+        else if ((S = this.findVertexContainer()) != null)
         {
-            System.out.println("==3== : " + S);
-            //~ Map<String, List<String>> m = new HashMap();
-            //~ m.put(S, new LinkedList<String>());
             Graph a = new Graph(this);
             a = a.deprivateOf(new Graph(S));
-            //~ this.deprivateOf(new Graph(m));
-            System.out.println(a);
             return a.MIS();
         }
-        else if((S = this.findFoldable()) != null) // get2degreeVertex
+        else if ((S = this.findFoldable()) != null)
         {
             return 1+(this.fold2(S).MIS());
         }
@@ -373,16 +375,16 @@ public class Graph
             S = this.findMaxDegreeMaxEdgesVertex();
             Graph a = new Graph(this);
             a = a.deprivateOf(new Graph(S));
-            for(String item : this.mirror(S))
+            for (String item : this.mirror(S))
             {
                 a = a.deprivateOf(new Graph(item));
-            }  
+            }
             Graph b = new Graph(this);
-            for(String item : b.getNeighborsWithVertex(S))
+            for (String item : b.getNeighborsWithVertex(S))
             {
                 b = b.deprivateOf(new Graph(item));
             }
-            return Math.max(a.MIS(), b.MIS());           
+            return Math.max(a.MIS(), b.MIS());
         }
     }
 
@@ -401,16 +403,17 @@ public class Graph
         }
         return ret.toString();
     }
-    
-    
+
+
     /**
-     * Returns a vertex with N(vertex) max for which the number of edges between two vertices is maximum.
-     * @param 
+     * Returns a vertex with N(vertex) max for which the number of edges between
+     * two vertices is maximum.
+     * @param
      * @return The number of edge between two vertices of N(vertex).
      */
     public String findMaxDegreeMaxEdgesVertex()
     {
-        //Find the vertices with N(vertex) max.
+        // Find the vertices with N(vertex) max.
         String MDMEVertex = "";
         int maxValue = -1;
         Set<String> maxDegreeVertices = new HashSet<String>();
@@ -427,7 +430,9 @@ public class Graph
                 maxDegreeVertices.add(vertex.getKey());
             }
         }
-        //Find which vertex has the highest number of edges between two vertices.
+
+        // Find which vertex has the highest number of edges between two
+        // vertices.
         maxValue = -1;
         int tmp = -1;
         for (String vertex: maxDegreeVertices)

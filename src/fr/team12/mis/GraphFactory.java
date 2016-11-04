@@ -10,8 +10,17 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
 
+/**
+ * Create new graph.
+ */
 public class GraphFactory
 {
+    /**
+     * Generate a graph from file.
+     *
+     * @param path The file were the graph is stored (in .graphe format).
+     * @return either the graph either an error list.
+     */
     public static Either<Graph, String> generateFromFile(String path)
     {
         StringBuilder err = new StringBuilder();
@@ -62,6 +71,12 @@ public class GraphFactory
         return ret;
     }
 
+    /**
+     * Return a list of neighbors from a line in .graphe file.
+     *
+     * @param fullLine a line of a .graphe file.
+     * @return the list of neighbors of a vertex.
+     */
     private static List<String> getList(String fullLine) throws Exception
     {
         List<String> ret = new LinkedList<String>();

@@ -9,21 +9,40 @@ import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
 
+/**
+ * A graph representation
+ */
 public class Graph
 {
     private Map<String, List<String>> graph;
 
+    /**
+     * Create a new graph from map.
+     *
+     * @param graph Map that represent the graph.
+     */
     public Graph(Map<String, List<String>> graph)
     {
         this.graph = graph;
     }
-    public Graph(String vortex)
+
+    /**
+     * Create a new graph with a single vertex.
+     *
+     * @param vertex Vertex's name.
+     */
+    public Graph(String vertex)
     {
         Map<String, List<String>> m = new HashMap<String, List<String>>();
-        m.put(vortex, new LinkedList<String>());
+        m.put(vertex, new LinkedList<String>());
         this.graph = m;
     }
 
+    /**
+     * Copy constructor.
+     *
+     * @param graphToCopy Graph to copy.
+     */
     public Graph(Graph graphToCopy)
     {
         this.graph = new HashMap<String, List<String>>();
@@ -408,7 +427,6 @@ public class Graph
     /**
      * Returns a vertex with N(vertex) max for which the number of edges between
      * two vertices is maximum.
-     * @param
      * @return The number of edge between two vertices of N(vertex).
      */
     public String findMaxDegreeMaxEdgesVertex()

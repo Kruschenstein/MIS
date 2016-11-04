@@ -37,17 +37,15 @@
 
   <!-- JAR EXECUTION -->
   <target name="run" depends="dist">
-    <java jar="${bin}/${jar}" fork="true"/>
+    <java jar="${bin}/${jar}" fork="true">
+      <arg value="${arg0}"/>
+    </java>
   </target>
 
   <!-- DOCUMENTATION -->
   <target name="doc">
     <mkdir dir="${doc}"/>
-    <javadoc destdir="${doc}">
-      <fileset dir="${src}">
-        <include name="*.java"/>
-      </fileset>
-    </javadoc>
+    <javadoc sourcepath="${src}" destdir="${doc}" />
   </target>
 
   <target name="clean">
